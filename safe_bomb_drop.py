@@ -1,7 +1,4 @@
-# Simple demo of of the PCA9685 PWM servo/LED controller library.
-# This will move channel 0 from min to max position repeatedly.
-# Author: Tony DiCola
-# License: Public Domain
+
 from __future__ import division
 import time
 
@@ -20,8 +17,8 @@ pwm = Adafruit_PCA9685.PCA9685()
 #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
 
 # Configure min and max servo pulse lengths
-servo_min = 160 # 150  # Min pulse length out of 4096
-servo_max = 425 #600  # Max pulse length out of 4096
+servo_min = 150
+servo_max = 600
 netlaunch_min = 160
 netlaunch_max = 425
 
