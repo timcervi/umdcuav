@@ -1,13 +1,11 @@
-#DEBUG comments on lines 3, change file name on 6
-
-#import Adafruit_PCA9685
 import threading
 import numpy as np
 import time
 import cuav_run as ce
-debug=1
+debug=ce.debug	#get debug state from main file
 if not(debug):
 	import RPi.GPIO as GPIO
+	import Adafruit_PCA9685
 
 class AsyncServoControl (threading.Thread):
     	def __init__(self):
@@ -47,7 +45,7 @@ class AsyncServoControl (threading.Thread):
 		#global dcy_vel_avg,dcy_acc_avg, trackp, trackingtimeout, RunThreadsFlag, VerboseMode
 		#global framecounter, sonar_reading_threshold, NetEnable
 
-		global pwm	#the rest of the variables are gotten in the loop for updating every loop
+		global pwm	#the rest of the variables are gotten in the main loop 
 		RunThreadsFlag=ce.RunThreadsFlag#needed to start loop
 		
 		servo_freeze = True   # don't try to predict for servo movement
@@ -274,8 +272,8 @@ class AsyncServoControl (threading.Thread):
                     			time.sleep (0.05)
 
 			lastupdate = time.time() * 1000
-			#write any variables other processes need
-			ce.sonar_reading=sonar_reading, ce.servo_queue=servo_queue, ce.est_y=est_y,
+			#write any variables other processes need back to the main file
+			ce.sonar_reading=sonar_reading; ce.servo_queue=servo_queue; ce.est_y=est_y
 	def stop(self):
 		self._stop.set()
 
