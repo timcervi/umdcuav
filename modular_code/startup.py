@@ -1,6 +1,6 @@
 from builtins import input
 import cuav_run as ce	#get the main file for universal variables
-if not(ce.debug)
+if not(ce.debug):
 	import smbus #i2C
 	import RPi.GPIO as GPIO
 print("Sensor Pod Software - UMD CUAV Team - Fall 2017")
