@@ -1,7 +1,5 @@
 versionstring = '\nSensorPod 52 SRPY Attack Version\n'
 
-#import cv2  # openCV
-
 import math
 import numpy as np
 import time
@@ -12,11 +10,14 @@ if not(debug):
 	import RPi.GPIO as GPIO
 	from picamera import PiCamera
 	from picamera.array import PiRGBArray
-#setup i2c, gpio, and query for user inputs ALL ON IMPORT, returns the bus and mode flags
-	from startup import bus,VerboseMode,ShowGraphics,DecloudP
-if debug:
-	from startup import VerboseMode,ShowGraphics,DecloudP
+	import cv2  # openCV
+
+#import the other used modules
+import startup
 from servocontrolthread import AsyncServoControl
+
+#setup i2c, gpio, and query for user inputs ALL ON IMPORT, returns the bus and mode flags
+(bus,VerboseMode,ShowGraphics,DecloudP)=startup.startupfunc()
 
 BeeperP = False  # beeps at the beginning and whenever the sonar detects something close
 ServoP = True
