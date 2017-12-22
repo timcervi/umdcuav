@@ -65,12 +65,12 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 		blob1 [0:height1,0:blbmrg] = 0
 		blob1 [0:height1, width1-blbmrg:width1] = 0
 		blob1 = np.maximum(0, blob1)
-	sum1 = np.sum(blob1)
+		sum1 = np.sum(blob1)
 	
 	if (2 in scalelist):
 		scalefactor = pyrscale
 		dim = (int(width1*scalefactor),int(height1*scalefactor))
-	img2 = cv2.resize (img1, dim, interpolation = cv2.INTER_CUBIC)
+		img2 = cv2.resize (img1, dim, interpolation = cv2.INTER_CUBIC)
 		txtr2 = cv2.filter2D(img2,-1,cs_scale*cent)
 		blob2 = cv2.filter2D(txtr2,-1,bk_scale* blobkernel)
 		#cv2.imshow ('txtr2',txtr2)
@@ -80,13 +80,13 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 		blob2 [h2-blbmrg:h2, 0:w2] = 0
 		blob2 [0:h2,0:blbmrg] = 0
 		blob2 [0:h2, w2-blbmrg:w2] = 0
-	blob2 = np.maximum(0, blob2)
-	sum2 = np.sum(blob2)
+		blob2 = np.maximum(0, blob2)
+		sum2 = np.sum(blob2)
 	
 	if (3 in scalelist):
 		scalefactor = pyrscale * pyrscale
 		dim = (int(width1*scalefactor),int(height1*scalefactor))
-	img3 = cv2.resize (img1, dim, interpolation = cv2.INTER_CUBIC)
+		img3 = cv2.resize (img1, dim, interpolation = cv2.INTER_CUBIC)
 		txtr3 = cv2.filter2D(img3,-1,cs_scale*cent)
 		blob3 = cv2.filter2D(txtr3,-1,bk_scale* blobkernel)
 		#cv2.imshow ('txtr3',txtr3)
@@ -96,13 +96,13 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 		blob3 [h3-blbmrg:h3, 0:w3] = 0
 		blob3 [0:h3,0:blbmrg] = 0
 		blob3 [0:h3, w3-blbmrg:w3] = 0
-	blob3 = np.maximum(0,blob3)
-	sum3 = np.sum(blob3)
+		blob3 = np.maximum(0,blob3)
+		sum3 = np.sum(blob3)
 	
 	if (4 in scalelist):
 		scalefactor = pyrscale * pyrscale * pyrscale
 		dim = (int(width1*scalefactor),int(height1*scalefactor))
-	img4 = cv2.resize (img1, dim, interpolation = cv2.INTER_CUBIC)
+		img4 = cv2.resize (img1, dim, interpolation = cv2.INTER_CUBIC)
 		txtr4 = cv2.filter2D(img4,-1,cs_scale*cent)
 		blob4 = cv2.filter2D(txtr4,-1,bk_scale* blobkernel)
 		#cv2.imshow ('txtr4',txtr4)
@@ -112,8 +112,8 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 		blob4 [h4-blbmrg:h4, 0:w4] = 0
 		blob4 [0:h4,0:blbmrg] = 0
 		blob4 [0:h4, w4-blbmrg:w4] = 0
-	blob4 = np.maximum(0,blob4)
-	sum4 = np.sum(blob4)
+		blob4 = np.maximum(0,blob4)
+		sum4 = np.sum(blob4)
 	
 	if (5 in scalelist):
 		scalefactor = np.power(pyrscale, 4)
@@ -128,8 +128,8 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 		blob5 [h5-blbmrg:h5, 0:w5] = 0
 		blob5 [0:h5,0:blbmrg] = 0
 		blob5 [0:h5, w5-blbmrg:w5] = 0
-	blob5 = np.maximum(0,blob5)
-	sum5 = np.sum(blob5)
+		blob5 = np.maximum(0,blob5)
+		sum5 = np.sum(blob5)
 	
 	if (6 in scalelist):
 		scalefactor = np.power(pyrscale, 5)
@@ -145,8 +145,8 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 		blob6 [0:h6,0:blbmrg] = 0
 		blob6 [0:h6, w6-blbmrg:w6] = 0
 		#cv2.imshow ('blob6',blob6)
-	blob6 = np.maximum(0,blob6)
-	sum6 = np.sum(blob6)
+		blob6 = np.maximum(0,blob6)
+		sum6 = np.sum(blob6)
 	
 	sumvec = (sum1, sum2, sum3, sum4, sum5, sum6)
 	if max(sumvec) >= blbsumthrsh:
@@ -155,7 +155,7 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 			pyrsc = 1.0
 			trackscale = 1
 			tracksize = tracksize0
-		M = cv2.moments(blob1 + 0.01)
+			M = cv2.moments(blob1 + 0.01)
 			ntx = int (M['m10']/M['m00'])
 			nty = int (M['m01']/M['m00'])
 			cv2.rectangle(img1,(ntx-tracksize,nty-tracksize),(ntx+tracksize,nty+tracksize),(128,128,128),1)
@@ -163,7 +163,7 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 			pyrsc = 1/pyrscale
 			trackscale = 2
 			tracksize = int(tracksize0 * pyrsc)
-		M = cv2.moments(blob2 + 0.01)
+			M = cv2.moments(blob2 + 0.01)
 			ntx = int (pyrsc * M['m10']/M['m00'])
 			nty = int (pyrsc * M['m01']/M['m00'])
 			cv2.rectangle(img1,(ntx-tracksize,nty-tracksize),(ntx+tracksize,nty+tracksize),(128,128,128),1)
@@ -171,7 +171,7 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 			pyrsc = 1/pyrscale/pyrscale
 			trackscale = 3
 			tracksize = int(tracksize0 * pyrsc)
-		M = cv2.moments(blob3 + 0.01)
+			M = cv2.moments(blob3 + 0.01)
 			ntx = int (pyrsc * M['m10']/M['m00'])
 			nty = int (pyrsc * M['m01']/M['m00'])
 			cv2.rectangle(img1,(ntx-tracksize,nty-tracksize),(ntx+tracksize,nty+tracksize),(128,128,128),1)
@@ -195,7 +195,7 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 			pyrsc = 1/pyrscale/pyrscale/pyrscale/pyrscale/pyrscale
 			trackscale = 6
 			tracksize = int(tracksize0 * pyrsc)
-		M = cv2.moments(ROIblob + 0.01)
+			M = cv2.moments(ROIblob + 0.01)
 			ntx = int (pyrsc * M['m10']/M['m00'])
 			nty = int (pyrsc * M['m01']/M['m00'])
 			cv2.rectangle(img1,(ntx-tracksize,nty-tracksize),(ntx+tracksize,nty+tracksize),(128,128,128),1)
