@@ -2,7 +2,7 @@ print('===================== start cuav_run ===================:)')
 import cv2  # openCV
 from multiprocessing import Process, Queue
 import threading
-debug=1
+debug=0
 if not(debug):
 	import RPi.GPIO as GPIO
 
@@ -31,7 +31,7 @@ if vars.LoggingP == True:
 	print('Datalogger Process start')
 
 # ============ Start the Camera Process
-cam_process = Process(target=camproc.cam_loop, args=(vars.queue_from_cam, vars.DecloudP))#decloudp unused
+cam_process = Process(target=cameraproc.cam_loop, args=(vars.queue_from_cam, vars.DecloudP))#decloudp unused
 cam_process.start()
 
 # ============ Start the Main Analysis Loop

@@ -18,7 +18,7 @@ print('Be sure to update the trim values for the vehicle!')
 
 #=============VARIABLES===============
 BeeperP = False  # beeps at the beginning and whenever the sonar detects something close
-ServoP = True
+ServoP = False
 NetEnable = True
 UseSonar = False
 LoggingP = True
