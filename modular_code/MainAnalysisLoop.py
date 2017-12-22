@@ -98,7 +98,7 @@ def mainLoop():
             #update_max_min(tracksize)
             (est_x, est_y, limitsp) = blobFuncs.check_fix_limits(est_x, est_y, tracksize) 
 
-                    (ROIblob, ROIblobsum, adjx, adjy) = blobFuncs.ROI_find_a_blob(gray, est_x, est_y, centsurr2, blobkernel, trackscale)
+            (ROIblob, ROIblobsum, adjx, adjy) = blobFuncs.ROI_find_a_blob(gray, est_x, est_y, centsurr2, blobkernel, trackscale)
             if ROIblobsum < blobsumthresh:    # Tracking Threshold
                 print('%d: ROI blob too small (%f).'%(framecounter, ROIblobsum))
                 trackingtimeout -= 1
