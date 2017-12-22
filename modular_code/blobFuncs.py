@@ -47,6 +47,7 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 	trackp=vars.trackp; tracksize=vars.tracksize; pyrscale=vars.pyrscale; bk_scale=vars.bk_scale
 	cs_scale=vars.cs_scale; blbmrg=vars.blbmrg; tracksize0=vars.tracksize0; trackscale=vars.trackscale
         blobkernel=vars.blobkernel
+        ROIblob=np.zeros((50,50))
 	#print 'Running:  Find a Blob.'
 	max1 = 0   #maxes are unused
 	max2 = 0

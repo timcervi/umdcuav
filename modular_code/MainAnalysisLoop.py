@@ -22,7 +22,8 @@ def mainLoop():
 	ROIsum_thresh = 600   # is this being used anywhere? unused
 	ROIfilt = np.zeros((2*tracksize,2*tracksize))
 	blobsumthresh = 50
-
+        ROIblob=np.zeros((50,50))
+        
 	blobFuncs.check_fix_limits (est_x, est_y, tracksize)
 
 	# ======   Startup Services ======
@@ -49,6 +50,8 @@ def mainLoop():
 		VerboseMode=vars.VerboseMode; MovieP=vars.MovieP; LoggingP=vars.LoggingP; ShowGraphics=vars.ShowGraphics
 		DecloudP=vars.DecloudP; sonar_reading=vars.sonar_reading
                 dcx=vars.dcx; dcy=vars.dcy; dcx_vel=vars.dcx_vel; dcy_vel=vars.dcy_vel
+                dcx_vel_avg=vars.dcx_vel_avg; dcy_vel_avg=vars.dcy_vel_avg;
+                dcx_acc_avg=vars.dcx_acc_avg; dcy_acc_avg=vars.dcy_acc_avg
 		while vars.queue_from_cam.empty():   # wait for a frame to arrive
 			pass
 		bgr_image = vars.queue_from_cam.get()   # the frame buffer is only 1 frame deep
