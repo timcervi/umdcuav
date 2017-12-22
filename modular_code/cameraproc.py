@@ -2,10 +2,12 @@ from picamera import PiCamera
 from picamera.array import PiRGBArray
 import cv2
 import time
+import startup as vars
 
 def cam_loop(queue_from_cam, DeCloudP):#decloudp unused
     print 'Initializing PiCamera'
     resolution_x=vars.resolution_x; resolution_y=vars.resolution_y
+    
     with PiCamera() as camera:
         camera.resolution = (resolution_x, resolution_y)
 	camera.framerate = 90  # was 30

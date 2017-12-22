@@ -7,13 +7,15 @@ def mainLoop():
 	import RPi.GPIO as GPIO
 	from multiprocessing import Queue
 	import blobFuncs    # our module with our functions
+	import startup as vars
+	
 	originaltime = time.time()   # grab the starting time of the program
 	datime = originaltime
 
-	tracksize0 = vars.tracksize0
-	tracksize = vars.tracksize
-	trackscale = vars.trackscale
-
+        #get universal variables
+	tracksize0 = vars.tracksize0; tracksize = vars.tracksize; trackscale = vars.trackscale
+        est_x=vars.est_x; est_y=vars.est_y
+        
 	ROIwidth = 2*tracksize0
 	checkROItimer = 10  #unused
 	checkROItimer_reset = 5  #unused
@@ -45,8 +47,8 @@ def mainLoop():
 		#get used variables from the main file
 		tracksize=vars.tracksize; trackscale=vars.trackscale; trackp=vars.trackp; 
 		VerboseMode=vars.VerboseMode; MovieP=vars.MovieP; LoggingP=vars.LoggingP; ShowGraphics=vars.ShowGraphics
-		sonar_reading=vars.sonar_reading
-
+		DecloudP=vars.DecloudP; sonar_reading=vars.sonar_reading
+                dcx=vars.dcx; dcy=vars.dcy; dcx_vel=vars.dcx_vel; dcy_vel=vars.dcy_vel
 		while vars.queue_from_cam.empty():   # wait for a frame to arrive
 			pass
 		bgr_image = vars.queue_from_cam.get()   # the frame buffer is only 1 frame deep
@@ -66,12 +68,11 @@ def mainLoop():
 			#gray = 255 - blu   # this inversion is used for tracking bright blue
 				
 		lasttrackp = trackp  # hold the state of trackp from last cycle
-		olddcx = vars.dcx  # keeps state from last cycle
-		olddcy = vars.dcy
-		olddcx_vel = vars.dcx_vel
-		olddcy_vel = vars.dcy_vel
+		olddcx = dcx  # keeps state from last cycle
+		olddcy = dcy
+		olddcx_vel = dcx_vel
+		olddcy_vel = dcy_vel
 		framecounter = framecounter + 1
-		vars.framecounter=framecounter #write to main file
 
 		newtime = time.time()
 		if VerboseMode:
@@ -223,7 +224,7 @@ def mainLoop():
 
 		saveimg = bgr_image[::-1,::-1,:].copy()
 
-		if (sonarsonar_reading < 500):
+		if (sonar_reading < 500):
 		#print 'SonarPing Detected < 5 meters'
 			textstr = 'sonar (%d)'%sonar_reading
 			cv2.putText (saveimg,textstr,(100,230),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255))
@@ -272,5 +273,5 @@ def mainLoop():
 		vars.dcy_vel_avg=dcy_vel_avg; vars.dcx_acc_avg=dcx_acc_avg;
 		vars.dcy_acc_avg=dcy_acc_avg;
 		vars.sonar_reading=sonar_reading; vars.newtime=newtime; vars.originaltime=originaltime
-		#framecounter, imagetimelabel, autop
+		vars.framecounter=framecounter
 		# ========= end of main loop ==========

@@ -1,4 +1,6 @@
 import startup as vars
+import cv2
+import numpy as np
 
 def ROI_find_a_blob (img1, est_x, est_y, cent, blob, scale_of_interest):
 #	global trackp, tracksize, trackscale, pyrscale, bk_scale, cs_scale, blbmrg, tracksize0, resolution_x, resolution_y
@@ -44,7 +46,7 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 	#global trackp, tracksize, pyrscale, bk_scale, cs_scale, blbmrg, tracksize0, trackscale
 	trackp=vars.trackp; tracksize=vars.tracksize; pyrscale=vars.pyrscale; bk_scale=vars.bk_scale
 	cs_scale=vars.cs_scale; blbmrg=vars.blbmrg; tracksize0=vars.tracksize0; trackscale=vars.trackscale
-
+        blobkernel=vars.blobkernel
 	#print 'Running:  Find a Blob.'
 	max1 = 0   #maxes are unused
 	max2 = 0

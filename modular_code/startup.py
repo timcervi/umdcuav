@@ -67,6 +67,7 @@ tracksize0=18 #base ROI size
 tracksize=tracksize0
 trackscale=1
 pyrscale = 0.7  # image pyramid step scaling factor	
+
 newtime=time.time()
 originaltime=time.time()
 
