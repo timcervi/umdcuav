@@ -1,0 +1,5 @@
+This is the CUAV code split into different modules for ease of reading and editing. 
+Right now only the servo loop is implemented as proof of concept, the rest will be added shortly.
+
+Note: startup.py has 'from builtins import input'    this allows the input function used to be compatible with python 2 and 3.
+You will need to 'sudo pip install future'. (this installs builtins)
