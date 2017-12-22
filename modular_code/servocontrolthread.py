@@ -1,18 +1,17 @@
 import threading
 import numpy as np
 import time
-import cuav_run as ce
-debug=ce.debug	#get debug state from main file
-if not(debug):
-	import RPi.GPIO as GPIO
-	import Adafruit_PCA9685
+import startup as vars
 
 class AsyncServoControl (threading.Thread):
-    	def __init__(self):
-		global pwm
+    	def __init__(self, debug):
+		self.debug=debug
+    			
 		super(AsyncServoControl, self).__init__()
 		# Initialise the PWM device using the default address
 		if not(debug):
+			import RPi.GPIO as GPIO
+			import Adafruit_PCA9685
 			pwm = Adafruit_PCA9685.PCA9685()
 			pwm.set_pwm_freq(44)      # Set frequency to 44, was initially 60 Hz
 
@@ -29,9 +28,10 @@ class AsyncServoControl (threading.Thread):
 			pwm.set_pwm(2, 0, VehPitchMiddle)
 			pwm.set_pwm(3, 0, VehYawMiddle)
 			pwm.set_pwm(4, 0, netlaunch_safe)
+			self.pwm=pwm
 
 		print 'Initial values sent to the PWM board.'
-		if ce.BeeperP and not(debug):
+		if vars.BeeperP and not(debug):
 			for qq in range(3):
 				GPIO.output (23, 1)
 				time.sleep (0.05)
@@ -44,9 +44,10 @@ class AsyncServoControl (threading.Thread):
 		#global sonar_reading, servo_queue, pwm, est_x, est_y, dcx, dcy, dcx_vel_avg,dcx_acc_avg
 		#global dcy_vel_avg,dcy_acc_avg, trackp, trackingtimeout, RunThreadsFlag, VerboseMode
 		#global framecounter, sonar_reading_threshold, NetEnable
-
-		global pwm	#the rest of the variables are gotten in the main loop 
-		RunThreadsFlag=ce.RunThreadsFlag#needed to start loop
+		debug=self.debug
+		if not(debug):
+			pwm=self.pwm	#the rest of the variables are gotten in the main loop 
+		RunThreadsFlag=vars.RunThreadsFlag#needed to start loop
 		
 		servo_freeze = True   # don't try to predict for servo movement
 		maxstep = 50#unused
@@ -94,21 +95,21 @@ class AsyncServoControl (threading.Thread):
 		servotimeoutval = 5   # of servo process cycles before flying neutral ~ 1 sec
 		servotimeout = servotimeoutval
 		sonarcountdown = 3    # sonar ping interval (in multiples of the servo loop)
-		UseSonar=ce.UseSonar	#get usesonar from main file
+		UseSonar=vars.UseSonar	#get usesonar from main file
 		if UseSonar and not(debug):
 			try:
 				bus.write_byte (0x50, 81)   # trigger a sonar reading
 			except:
 				print "I2C bus error : Bad I2C Write Attempt"
 		while RunThreadsFlag:
-    		#get the needed variables, ce is the main file where the variables scope is
-			#unused:est_x, dcx_acc_avg,dcy_acc_avg, VerboseMode
-			sonar_reading=ce.sonar_reading; servo_queue=ce.servo_queue; est_x=ce.est_x; est_y=ce.est_y
-			dcx=ce.dcx; dcy=ce.dcy; dcx_vel_avg=ce.dcx_vel_avg;dcx_acc_avg=ce.dcx_acc_avg
-			dcy_vel_avg=ce.dcy_vel_avg; dcy_acc_avg=ce.dcy_acc_avg; trackp=ce.trackp 
-			trackingtimeout=ce.trackingtimeout; RunThreadsFlag=ce.RunThreadsFlag; VerboseMode=ce.VerboseMode
-			framecounter=ce.framecounter; sonar_reading_threshold=ce.sonar_reading_threshold
-			NetEnable=ce.NetEnable	
+    		#get the needed variables, ce is the startup where the variables scope is
+			#unused:est_x, dcx_acc_avg,dcy_acc_avg, 
+			sonar_reading=vars.sonar_reading; servo_queue=vars.servo_queue; est_x=vars.est_x; est_y=vars.est_y
+			dcx=vars.dcx; dcy=vars.dcy; dcx_vel_avg=vars.dcx_vel_avg;dcx_acc_avg=vars.dcx_acc_avg
+			dcy_vel_avg=vars.dcy_vel_avg; dcy_acc_avg=vars.dcy_acc_avg; trackp=vars.trackp 
+			trackingtimeout=vars.trackingtimeout; RunThreadsFlag=vars.RunThreadsFlag;
+			framecounter=vars.framecounter; sonar_reading_threshold=vars.sonar_reading_threshold
+			NetEnable=vars.NetEnable	
 
 			if not(debug):
 				if GPIO.input(22):
@@ -272,8 +273,8 @@ class AsyncServoControl (threading.Thread):
                     			time.sleep (0.05)
 
 			lastupdate = time.time() * 1000
-			#write any variables other processes need back to the main file
-			ce.sonar_reading=sonar_reading; ce.servo_queue=servo_queue; ce.est_y=est_y
+			#write any variables other processes need back to the startup file
+			vars.sonar_reading=sonar_reading; vars.servo_queue=servo_queue; vars.est_y=est_y
 	def stop(self):
 		self._stop.set()
 
