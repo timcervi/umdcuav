@@ -1,73 +1,66 @@
-versionstring = '\nSensorPod 52 SRPY Attack Version\n'
-
-import math
-import numpy as np
-import time
+print('===================== start cuav_run ===================:)')
+import cv2  # openCV
 from multiprocessing import Process, Queue
 import threading
 debug=1
 if not(debug):
 	import RPi.GPIO as GPIO
-	from picamera import PiCamera
-	from picamera.array import PiRGBArray
-	import cv2  # openCV
 
 #import the other used modules
-import startup
+import startup as vars
 from servocontrolthread import AsyncServoControl
+import datalogger
+import cameraproc
+import blobFuncs
+import MainAnalysisLoop
 
-#setup i2c, gpio, and query for user inputs ALL ON IMPORT, returns the bus and mode flags
-(bus,VerboseMode,ShowGraphics,DecloudP)=startup.startupfunc()
+#setup i2c, gpio, variables, and get user inputs, returns the bus and mode flags
+vars.startupfunc(debug)
 
-BeeperP = False  # beeps at the beginning and whenever the sonar detects something close
-ServoP = True
-NetEnable = True
-UseSonar = False
-LoggingP = True
-MovieP = False   # always starts False - initially started by tracking, but then toggled by the m key
-#MovieP = True  # debug
-RunThreadsFlag = True  # always starts False - used internally to shutdown threads
-
-sonar_reading = 765
-sonar_reading_threshold = 200   # this is the threshold for firing the net in units = cm
-
-resolution_x = 320
-Xcenter = resolution_x / 2
-resolution_y = 240
-Ycenter = resolution_y / 2
-dcx = 0
-dcx_vel = 0
-dcx_vel_avg = 0
-dcy = 0
-dcy_vel = 0
-dcy_vel_avg = 0
-framecounter = 0
-dcx_acc_avg = 0
-dcy_acc_avg =0
-est_x=0
-est_y=0
-
-#only used in camera process
-bk_scale = 0.04     # blob kernel scaling
-cs_scale = -0.1
-#cs_scale = -0.15   #   center-surround kernel scaling
-blbmrg = 5      # border margin for blob detection
-
-pyrscale = 0.7  # image pyramid step scaling factor
-    
-trackp = 0
-restart_code = 0 #unused
-gray = np.zeros((240,320))
-ROIblob = np.zeros((50, 50))
-trackingtimeout = 0 
-
-# ==================== beginning of the servo control thread ===========
-servo_queue = Queue()
-# ServoP is defined earlier above
-if ServoP:
-	servothread = AsyncServoControl()
+#==========Start the servo thread
+if vars.ServoP:
+	servothread = AsyncServoControl(debug)
 	servothread.daemon = True
 	servothread.start()
-	print "Servo Thread Start..."
-# ========== end of the servo control thread =========
+	print("Servo Thread Start...")
 
+# ============ Start the datalogger process
+if vars.LoggingP == True:
+	datalogger_process = Process(target=datalogger.data_logger, args=(vars.image_queue, vars.image_label_queue, vars.text_queue, vars.servo_queue,vars.DecloudP,vars.versionstring))
+	datalogger_process.start() 
+	print('Datalogger Process start')
+
+# ============ Start the Camera Process
+cam_process = Process(target=camproc.cam_loop, args=(vars.queue_from_cam, vars.DecloudP))#decloudp unused
+cam_process.start()
+
+# ============ Start the Main Analysis Loop
+MainAnalysisLoop.mainLoop()
+
+
+# ============Cleanup/Exit Code
+avgFPS = vars.framecounter / (vars.newtime - vars.originaltime)
+
+print '\nAverage FPS was %f frames per second'%(avgFPS)
+vars.RunThreadsFlag=False
+if vars.LoggingP:
+    filestring = 'Average FPS was %f frames per second'%(avgFPS)
+    vars.text_queue.put (filestring)
+
+    datalogger_process.terminate()
+    datalogger_process.join()
+    print 'Terminated.    (datalogger process)'
+
+cv2.destroyAllWindows()
+print 'closing windows'
+cv2.waitKey(1)
+
+cam_process.terminate()
+print 'Waiting for camera process to terminate... '
+cam_process.join()
+print 'Terminated.    (camera process)'
+
+if not(debug):
+	GPIO.cleanup ()
+	
+print '\nEverything appears to have closed gracefully.'
