@@ -14,7 +14,9 @@ class AsyncServoControl (threading.Thread):
 			import Adafruit_PCA9685
 			pwm = Adafruit_PCA9685.PCA9685()
 			pwm.set_pwm_freq(44)      # Set frequency to 44, was initially 60 Hz
-
+			# ============ SETUP I2C ============
+			import smbus #i2C
+			bus = smbus.SMBus(1)
 		VehRollMiddle = 301
 		VehPitchMiddle = 299
 		VehYawMiddle = 301	# 300 (@ 44Hz pwm update rate) is roughly center stick 

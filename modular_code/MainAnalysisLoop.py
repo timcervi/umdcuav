@@ -31,7 +31,7 @@ def mainLoop():
 	airborne_main = False  # this is a triggered flag.  Once detected, airborne_main remains true.
 	trackingtimeout = 0  # this is the counter for how long to persist after we lose tracking (trackp)
 	trackingtimeout_reset = 20
-	trackp = 0
+	vars.trackp = 0
 	ROI_img = np.zeros((50,50))
 	ROIblob_up = np.zeros((50,50))
 	ROIblob_down = np.zeros((50,50))
@@ -46,12 +46,13 @@ def mainLoop():
 
 	while True:
 		#get used variables from the main file
-		tracksize=vars.tracksize; trackscale=vars.trackscale; trackp=vars.trackp; 
+		tracksize=vars.tracksize; trackscale=vars.trackscale; trackp=vars.trackp; pyrscale=vars.pyrscale
 		VerboseMode=vars.VerboseMode; MovieP=vars.MovieP; LoggingP=vars.LoggingP; ShowGraphics=vars.ShowGraphics
-		DecloudP=vars.DecloudP; sonar_reading=vars.sonar_reading
+		DecloudP=vars.DecloudP; sonar_reading=vars.sonar_reading; Xcenter=vars.Xcenter; Ycenter=vars.Ycenter
                 dcx=vars.dcx; dcy=vars.dcy; dcx_vel=vars.dcx_vel; dcy_vel=vars.dcy_vel
                 dcx_vel_avg=vars.dcx_vel_avg; dcy_vel_avg=vars.dcy_vel_avg;
                 dcx_acc_avg=vars.dcx_acc_avg; dcy_acc_avg=vars.dcy_acc_avg
+
 		while vars.queue_from_cam.empty():   # wait for a frame to arrive
 			pass
 		bgr_image = vars.queue_from_cam.get()   # the frame buffer is only 1 frame deep
