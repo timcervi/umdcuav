@@ -926,7 +926,7 @@ while True:
                 text_queue.put (filestring)
             
         if ShowGraphics:
-                cv2.imshow('gray',saveimg2)
+                cv2.imshow('gray',saveimg)
                 #cv2.imshow('ROI_img',ROI_img)
                 cv2.imshow('ROIfilt',ROIfilt)
                 cv2.imshow('ROIblob',ROIblob)
