@@ -5,7 +5,7 @@ import numpy as np
 def ROI_find_a_blob (img1, est_x, est_y, cent, blob, scale_of_interest):
 #	global trackp, tracksize, trackscale, pyrscale, bk_scale, cs_scale, blbmrg, tracksize0, resolution_x, resolution_y
 	trackp=vars.trackp; tracksize=vars.tracksize; trackscale=vars.trackscale; pyrscale=vars.pyrscale
-	bk_scale=vars.bkscale; cs_scale=vars.cs_scale; blbmrg=vars.blbmrg; tracksize0=vars.tracksize0
+	bk_scale=vars.bk_scale; cs_scale=vars.cs_scale; blbmrg=vars.blbmrg; tracksize0=vars.tracksize0
 	resolution_x=vars.resolution_x; resolution_y=vars.resolution_y
 
 	ax = est_x
@@ -26,7 +26,7 @@ def ROI_find_a_blob (img1, est_x, est_y, cent, blob, scale_of_interest):
 	txb = int(round(ax + tmp_tracksize))
 	tya = int(round(ay - tmp_tracksize))
 	tyb = int(round(ay + tmp_tracksize))
-	tmp = gray[tya:tyb,txa:txb]
+	tmp = img1[tya:tyb,txa:txb]
 	dim = (ROIwidth, ROIwidth)  # all ROIs are made to this fixed size
 	ROI_img = cv2.resize(tmp, dim, interpolation = cv2.INTER_AREA)
 	ROIfilt = cv2.filter2D(ROI_img,-1,cs_scale*cent)       # contrast filter the ROI
@@ -48,7 +48,6 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 	cs_scale=vars.cs_scale; blbmrg=vars.blbmrg; tracksize0=vars.tracksize0; trackscale=vars.trackscale
         blobkernel=vars.blobkernel
         ROIblob=np.zeros((50,50))
-
 	#print 'Running:  Find a Blob.'
 	max1 = 0   #maxes are unused
 	max2 = 0
@@ -213,13 +212,13 @@ def find_a_blob (img1, cent, blob, scalelist, blbsumthrsh):
 		ntx = width1 / 2  # jump to the center
 		nty = height1 / 2
 		pyrsc = 1.0
-	trackp = 0
+		trackp = 0
 
 	#set variables back to main file
 	vars.trackscale=trackscale; vars.trackp=trackp; vars.tracksize=tracksize; vars.pyrscale=pyrscale;
 	#cv2.imshow('img1',img1)
 	suggested_target = (ntx, nty, 0, 0)  # zero velocities
-	return suggested_target
+	return (ntx,nty,0,0,trackp,tracksize,trackscale)
    
 # =================== end: Find-a-Blob ==================
 	

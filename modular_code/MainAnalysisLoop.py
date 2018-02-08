@@ -31,7 +31,7 @@ def mainLoop():
 	airborne_main = False  # this is a triggered flag.  Once detected, airborne_main remains true.
 	trackingtimeout = 0  # this is the counter for how long to persist after we lose tracking (trackp)
 	trackingtimeout_reset = 20
-	vars.trackp = 0
+	trackp = 0
 	ROI_img = np.zeros((50,50))
 	ROIblob_up = np.zeros((50,50))
 	ROIblob_down = np.zeros((50,50))
@@ -46,13 +46,12 @@ def mainLoop():
 
 	while True:
 		#get used variables from the main file
-		tracksize=vars.tracksize; trackscale=vars.trackscale; trackp=vars.trackp; pyrscale=vars.pyrscale
+		tracksize=vars.tracksize; trackscale=vars.trackscale; trackp=vars.trackp; 
 		VerboseMode=vars.VerboseMode; MovieP=vars.MovieP; LoggingP=vars.LoggingP; ShowGraphics=vars.ShowGraphics
-		DecloudP=vars.DecloudP; sonar_reading=vars.sonar_reading; Xcenter=vars.Xcenter; Ycenter=vars.Ycenter
+		DecloudP=vars.DecloudP; sonar_reading=vars.sonar_reading; pyrscale=vars.pyrscale
                 dcx=vars.dcx; dcy=vars.dcy; dcx_vel=vars.dcx_vel; dcy_vel=vars.dcy_vel
                 dcx_vel_avg=vars.dcx_vel_avg; dcy_vel_avg=vars.dcy_vel_avg;
-                dcx_acc_avg=vars.dcx_acc_avg; dcy_acc_avg=vars.dcy_acc_avg
-
+                dcx_acc_avg=vars.dcx_acc_avg; dcy_acc_avg=vars.dcy_acc_avg;Xcenter=vars.Xcenter;Ycenter=vars.Ycenter
 		while vars.queue_from_cam.empty():   # wait for a frame to arrive
 			pass
 		bgr_image = vars.queue_from_cam.get()   # the frame buffer is only 1 frame deep
@@ -91,8 +90,7 @@ def mainLoop():
 		# call find_a_target on startup, will set trackp as well as the est_x, etc.
 		if (trackingtimeout < 1) and (trackp == 0):   # initiate broad search
 			print('%d: calling Find_a_Blob (all scales) '%(framecounter))
-			(est_x, est_y, est_vx, est_vy)=blobFuncs.find_a_blob(gray, centsurr2, blobkernel, [1, 2, 3, 4, 5, 6], blobsumthresh)
-		
+			(est_x, est_y, est_vx, est_vy,trackp,tracksize,trackscale)=blobFuncs.find_a_blob(gray, centsurr2, blobkernel, [1, 2, 3, 4, 5, 6], blobsumthresh)
 		if (trackingtimeout > 0) or (trackp == 1):   # keep cycling if trackingtimeout > 0, otherwise that's it for the frame.
 			if VerboseMode:
 				print('Tracking Scale = %d'%trackscale)
